@@ -30,7 +30,6 @@ public:
     void jge(std::string&, std::string&);
     void jne(std::string&, std::string&);
     void jz(std::string&, std::string&);
-    void jnz(std::string&, std::string&);
     bool is_number(std::string&);
     bool check_reg(std::string&);
     void excep(std::string);
