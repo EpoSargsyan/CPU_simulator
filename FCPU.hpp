@@ -6,6 +6,7 @@ FCPU::FCPU() {
 
 void FCPU::get(std::string name) {
     std::string line;
+    get_labels();
     this->file.open("assm_code.txt");
     if (file.is_open()) {
         while (std::getline(file, line)) {
@@ -17,13 +18,26 @@ void FCPU::get(std::string name) {
     file.close();
 }
 
+void FCPU::get_labels() {
+    std::string line;
+    this->file.open("assm_code.txt");
+    if (this->file.is_open()) {
+        while (!(this->file.eof())) {
+            std::getline(this->file, line);
+            if (line.find(':') != -1) {
+                line.erase(line.begin() + line.find(':'));
+                this->label[line] = this->file.tellg();
+            }
+        } 
+    }
+    this->file.close();
+}
+
 void FCPU::cut(std::string rhs) {
     std::string oper = "";
     std::string reg = "";
     std::string src = "";
     if (rhs.find(':') != -1) {
-        rhs.erase(rhs.begin() + rhs.find(':'));
-        label[rhs] = this->file.tellg();
         return;
     }
     if (rhs.find(',') != -1) {
@@ -77,6 +91,7 @@ void FCPU::make() {
     jumps["jg"] = false;
     jumps["jge"] = false;
     jumps["jz"] = false;
+    jumps["jnz"] = false;
 
     func["mov"] = &FCPU::mov;
     func["add"] = &FCPU::add;
@@ -300,7 +315,7 @@ void FCPU::cmp(std::string& dest, std::string& src) {
                 jumps["jle"] = true;
                 jumps["jg"] = false;
                 jumps["jge"] = false;
-                jumps["jz"] = false;                
+                jumps["jz"] = false;
                 return;
             }
             else if (*(regs[dest]) > *(regs[src])) {
@@ -324,7 +339,7 @@ void FCPU::cmp(std::string& dest, std::string& src) {
 }
 
 void FCPU::jmp(std::string& dest, std::string& src) {
-    std::cout << "R1 " << this->r1 << std::endl << "R2 " << this->r2 << std::endl;
+    //std::cout << "R1 " << this->r1 << std::endl << "R2 " << this->r2 << std::endl;
     this->file.seekg(this->label[dest]);
 }
 
@@ -367,5 +382,11 @@ void FCPU::jz(std::string& dest, std::string& src) {
 void FCPU::jne(std::string& dest, std::string& src) {
     if (jumps["jne"]) {
         this->file.seekg(this->label[dest]);
+    }
+}
+
+void FCPU::print() {
+    for (auto it : regs) {
+        std::cout << it.first << " " << *it.second << std::endl;
     }
 }
