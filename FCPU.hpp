@@ -77,7 +77,6 @@ void FCPU::make() {
     jumps["jg"] = false;
     jumps["jge"] = false;
     jumps["jz"] = false;
-    jumps["jnz"] = false;
 
     func["mov"] = &FCPU::mov;
     func["add"] = &FCPU::add;
@@ -95,7 +94,6 @@ void FCPU::make() {
     func["jge"] = &FCPU::jge;
     func["jl"] = &FCPU::jl;
     func["jle"] = &FCPU::jle;
-    func["jnz"] = &FCPU::jnz;
     func["jne"] = &FCPU::jne;
 }
 
@@ -257,7 +255,6 @@ void FCPU::cmp(std::string& dest, std::string& src) {
                 jumps["jg"] = false;
                 jumps["jge"] = true;
                 jumps["jz"] = false;
-                jumps["jnz"] = false;
                 return;
             }
             else if (*(regs[dest]) < (stoi(src))) {
@@ -268,7 +265,6 @@ void FCPU::cmp(std::string& dest, std::string& src) {
                 jumps["jg"] = false;
                 jumps["jge"] = false;
                 jumps["jz"] = false;
-                jumps["jnz"] = true;
                 return;
             }
             else if (*(regs[dest]) > (stoi(src))) {
@@ -279,7 +275,6 @@ void FCPU::cmp(std::string& dest, std::string& src) {
                 jumps["jg"] = true;
                 jumps["jge"] = true;
                 jumps["jz"] = false;
-                jumps["jnz"] = true;
                 return;
             }
         } 
@@ -296,7 +291,6 @@ void FCPU::cmp(std::string& dest, std::string& src) {
                 jumps["jg"] = false;
                 jumps["jge"] = true;
                 jumps["jz"] = false;
-                jumps["jnz"] = false;
                 return;
             }
             else if (*(regs[dest]) < *(regs[src])) {
@@ -306,8 +300,7 @@ void FCPU::cmp(std::string& dest, std::string& src) {
                 jumps["jle"] = true;
                 jumps["jg"] = false;
                 jumps["jge"] = false;
-                jumps["jz"] = false;
-                jumps["jnz"] = true;
+                jumps["jz"] = false;                
                 return;
             }
             else if (*(regs[dest]) > *(regs[src])) {
@@ -318,7 +311,6 @@ void FCPU::cmp(std::string& dest, std::string& src) {
                 jumps["jg"] = true;
                 jumps["jge"] = true;
                 jumps["jz"] = false;
-                jumps["jnz"] = true;
                 return;
             }
         } 
@@ -368,12 +360,6 @@ void FCPU::jge(std::string& dest, std::string& src) {
 
 void FCPU::jz(std::string& dest, std::string& src) {
     if (jumps["jz"]) {
-        this->file.seekg(this->label[dest]);
-    }
-}
-
-void FCPU::jnz(std::string& dest, std::string& src) {
-    if (jumps["jnz"]) {
         this->file.seekg(this->label[dest]);
     }
 }
