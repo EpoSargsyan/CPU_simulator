@@ -9,8 +9,31 @@ class FCPU {
 public:
     FCPU();
     ~FCPU() = default;
-    void make();
     void get(std::string);
+    void print();
+
+private:
+    std::map<std::string, int*> regs;
+    std::map<std::string, void(FCPU::*)(std::string&, std::string&)> func; 
+    std::map<std::string, int> label;
+    std::map<std::string, bool> jumps;
+    std::ifstream file;
+    int r1 {};
+    int r2 {};
+    int r3 {};
+    int r4 {};
+    int r5 {};
+    int r6 {};
+    int r7 {};
+    int r8 {};
+    int r9 {};
+    int r10 {};
+
+private:
+    void make();
+    void get_labels();
+    bool is_number(std::string&);
+    bool check_reg(std::string&);
     void cut(std::string);
     void mov(std::string&, std::string&);
     void add(std::string&, std::string&);
@@ -30,28 +53,6 @@ public:
     void jge(std::string&, std::string&);
     void jne(std::string&, std::string&);
     void jz(std::string&, std::string&);
-    void get_labels();
-    void print();
-    bool is_number(std::string&);
-    bool check_reg(std::string&);
-    void excep(std::string);
-
-private:
-    std::map<std::string, int*> regs;
-    std::map<std::string, void(FCPU::*)(std::string&, std::string&)> func; 
-    std::map<std::string, int> label;
-    std::map<std::string, bool> jumps;
-    std::ifstream file;
-    int r1 {};
-    int r2 {};
-    int r3 {};
-    int r4 {};
-    int r5 {};
-    int r6 {};
-    int r7 {};
-    int r8 {};
-    int r9 {};
-    int r10 {};
 };
 
 #endif // FCPU_H
